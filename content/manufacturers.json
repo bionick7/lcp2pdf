@@ -1,0 +1,10 @@
+[
+  {
+    "id": "MAN",
+    "name": "DUMMY MANUFACTURER",
+    "light": "#A8D08D",
+    "dark": "#7EA068",
+    "quote": "Line go up",
+    "description": "Praesent id placerat felis. Integer suscipit rhoncus mauris. Integer iaculis libero odio, fermentum condimentum dui fringilla et. Morbi vel lorem tristique, pulvinar magna vitae, ornare lectus. Aliquam rhoncus dignissim dolor, vel venenatis felis tristique in. Nullam elit felis, dignissim et leo vel, eleifend vestibulum elit. Nam vestibulum magna et nisl auctor, vitae gravida est rutrum. Integer cursus nisi ut viverra faucibus. Sed rutrum velit nisl, a consectetur libero ultrices non. Fusce finibus, nulla sit amet mattis tincidunt, nisi nisi faucibus dolor, eu aliquam leo ligula et risus. Quisque venenatis ex at odio rhoncus pellentesque. Integer pellentesque eros massa, ut viverra risus dapibus eget. Maecenas laoreet felis libero, nec dictum orci fringilla sit amet. Vestibulum ullamcorper a sapien non ornare. Phasellus nisi eros, gravida vitae ornare a, luctus nec diam. "
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "wm_mod",
+    "name": "WEAPON MOD",
+    "license_id": "mf_frame_name",
+    "sp": 2,
+    "allowed_types": [],
+    "source": "MAN",
+    "license": "JON DOE",
+    "license_level": 2,
+    "effect": "Ut in odio sit amet purus varius viverra. Quisque turpis nisi, porta id placerat id, dapibus quis dolor. Aliquam vitae lectus ut lectus molestie auctor auctor eget dui. Morbi eleifend auctor purus ut hendrerit. Ut sit amet diam sit amet ex placerat commodo. Nullam euismod feugiat tempus. Proin dapibus fringilla convallis. Pellentesque eu purus vitae velit tincidunt condimentum at a leo. Morbi at sem eleifend, consequat lectus et, commodo magna. ",
+    "description": "Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum non tempor velit, eu pharetra orci. Integer posuere velit congue, tincidunt diam sed, imperdiet est. Quisque elementum molestie dictum. Sed mattis libero magna, vitae lacinia quam consectetur sed. Curabitur velit erat, semper vitae augue et, tempor dapibus tellus. ",
+    "tags": [{"id": "tg_unique"}, {"id": "tg_limited", "val": 4}]
+  }
+]

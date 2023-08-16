@@ -1,0 +1,84 @@
+[
+  {
+    "id": "ms_sys1",
+    "name": "DEPLOYABLE SYSTEM",
+    "source": "MAN",
+    "license": "JON DOE",
+    "license_id": "mf_frame_name",
+    "license_level": 1,
+    "description": "Morbi dolor lorem, consectetur ac consequat rutrum, vehicula at ipsum. Fusce fermentum vulputate ipsum vitae vestibulum. Phasellus varius odio ut dui rhoncus rhoncus. Suspendisse dictum vehicula quam, ac venenatis lorem semper vel. Integer ullamcorper vitae est vitae facilisis. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum magna turpis, tristique vitae aliquam vel, dignissim et ex. Aenean vel vulputate justo. Donec quis ante lacinia, rutrum ipsum in, luctus ipsum. Sed lorem tortor, interdum a faucibus eget, porta ut justo. Pellentesque lobortis egestas congue.",
+    "effect_print": "Contains a deployable system. You are responsable to write a comprehensive text in effect_print, since deployables /actions are typically not shown in a pdf like this",
+    "type": "System",
+    "sp": 1,
+    "effect": "COMPCON specific, if effect_print is used",
+    "deployables": [
+      {
+        "name": "Barbed wire",
+        "type": "",
+        "detail": "",
+        "size": 1,
+        "hp": "-",
+        "evasion": "-",
+        "instances": 3,
+        "activation": "Quick"
+      }
+    ],
+    "tags": [],
+    "synergies": []
+  },
+  {
+    "id": "ms_sys2",
+    "name": "Reaction and Quick Action",
+    "source": "MAN",
+    "license": "JON DOE",
+    "license_id": "mf_frame_name",
+    "license_level": 2,
+    "description": "In sodales turpis a dui tincidunt facilisis. Cras est tellus, faucibus sit amet orci ut, elementum porttitor dui. Nam accumsan quis est et convallis. Nunc a lobortis urna. Mauris congue lorem id magna tristique, sed molestie sem consequat. Etiam tincidunt tellus nec finibus ultricies. Quisque mauris ante, aliquet sed luctus a, sollicitudin ut enim. Aliquam erat volutpat. Donec vitae sem mauris. Sed non turpis et diam sollicitudin feugiat eu volutpat nisi. Maecenas lacinia, arcu sed efficitur egestas, turpis leo vulputate libero, a tincidunt enim justo id dui. Vivamus ac nisi at diam mattis congue vel sit amet nisl. Curabitur tempus fringilla lorem ut pellentesque. Integer non lobortis ex. ",
+    "effect_print": "This action grants a protol and a reaction. Reactions are the only \"actions\" that can get displayed. Protocols give the system an orange color",
+    "type": "System",
+    "sp": 2,
+    "effect": "Deploy a size 1 barricade box in a free adjacent space to you.",
+    "actions": [
+      {
+        "name": "PROTOCOL",
+        "activation": "Protocol",
+        "detail": "This is a protocoll."
+      },
+      {
+        "name": "Newtown's 3rd law",
+        "activation": "Reaction",
+        "trigger": "Action",
+        "frequency": "3/Scene",
+        "detail": "Equal and opposite reaction"
+      }
+    ],
+    "tags": [{"id": "tg_unique"}],
+    "synergies": []
+  },
+  {
+    "id": "ms_sys3",
+    "name": "Tech actions",
+    "source": "MAN",
+    "license": "JON DOE",
+    "license_id": "mf_frame_name",
+    "license_level": 3,
+    "description": "Aenean venenatis felis id cursus venenatis. Vivamus semper fermentum bibendum. Curabitur sagittis facilisis rutrum. Suspendisse sit amet aliquet elit. Donec velit nisi, euismod sit amet laoreet quis, consequat at nulla. Duis consectetur, tellus id imperdiet luctus, augue quam porta odio, sed hendrerit est urna non arcu. Curabitur eu malesuada massa, in luctus velit. Vivamus dapibus enim nec mauris pharetra laoreet. Maecenas et nulla ullamcorper, convallis quam et, pretium ex. Integer ornare tellus risus, et pretium magna pharetra sed. ",
+    "effect_print": "Tech systems get handled differently. Set \"type\" to Tech to render this",
+    "type": "Tech",
+    "sp": 5,
+    "actions": [
+      {
+        "name": "An invade",
+        "activation": "Invade",
+        "detail": "Invades are hard."
+      },
+      {
+        "name": "Another invade",
+        "activation": "Invade",
+        "detail": "Still hard :("
+      }
+    ],
+    "tags": [{"id": "tg_limited", "val": 3}, {"id": "tg_unique"}, {"id": "tg_heat_self", "val": 1}],
+    "synergies": []
+  }
+ ]
