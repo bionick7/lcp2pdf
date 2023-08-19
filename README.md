@@ -38,5 +38,5 @@ If you choose to include lcp2pdf in a larger Typst document, you can include it 
 = Other stuff
 #lorem(150)
 
-#print_all()
+#display_whole()
 ```

@@ -84,26 +84,29 @@
 
 // ==================================  STYLING  ===================================
 
-#show heading.where(level: 1): it => (
-  align(center, text(
-    size: 24pt,
-    fill: DEFAULT_RED, 
-    strong(it)
-  ))
-)
-#set text(
-  font: "DM Sans",
-  overhang: true
-)
-#set par(
-  leading: 4pt,
-)
-#set page(
-  numbering: "[1]",
-  number-align: right,
-  margin: (left: 3em, right: 3em, bottom: 5em),
-  columns: 1
-)
+#let style(doc) = [
+  #show heading.where(level: 1): it => (
+    align(center, text(
+      size: 24pt,
+      fill: DEFAULT_RED, 
+      strong(it)
+    ))
+  )
+  #set text(
+    font: "DM Sans",
+    overhang: true
+  )
+  #set par(
+    leading: 4pt,
+  )
+  #set page(
+    numbering: "[1]",
+    number-align: right,
+    margin: (left: 3em, right: 3em, bottom: 5em),
+    columns: 1
+  )
+  #doc
+]
 
 // ==================================  UTILITY  ===================================
 
@@ -403,16 +406,21 @@
 
 // ==================================  FILE  ===================================
 
+#let display_whole() = {
+  for manufacturer in manufacturers {
+    pagebreak()
+    display_manufacturer(manufacturer)
+    for frame_data in frames.filter(x => x.source == manufacturer.id) {
+      pagebreak()
+      display_frame(frame_data)
+      display_license(frame_data.name, frame_data.license_id)
+    }
+  }  
+}
+
 #par(leading: 8pt, outline(depth: 1))
 //#grid(columns: 6, ..range(0xe900, 0xe96b).map(x => {
 //  [#str(x, base:16)] + text(font: "compcon", fallback: false, str(x, base:16) + str.from-unicode(x) + "\n")
 //}))  // Test font
-#for manufacturer in manufacturers {
-  pagebreak()
-  display_manufacturer(manufacturer)
-  for frame_data in frames.filter(x => x.source == manufacturer.id) {
-    pagebreak()
-    display_frame(frame_data)
-    display_license(frame_data.name, frame_data.license_id)
-  }
-}
+#show: style
+#display_whole()
