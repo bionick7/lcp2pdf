@@ -42,8 +42,8 @@
   Artillery: 0xe94b,
   Controller: 0xe94c,
   Striker: 0xe94d,
-  Support: 0xe94f,
-  Defender: 0x950
+  Support: 0xe94e,
+  Defender: 0x94f
 )
 
 #let STAT_DISPLAY = (

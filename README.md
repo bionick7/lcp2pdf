@@ -5,6 +5,8 @@ A Typst-based tool to convert lancer lcp content into an pdf in style of the cor
 
 This repository provides a way to read the data files included in the .lcp file and format them into a pdf in the style of the lancer core rulebook. This way, you can use one source to generate both lcp and the manual.
 
+![Screenshot of rendered pdf](screenshots/Preview.png)
+
 ## Usage
 If you already have the lcp file, change the file extension to ".zip", and extract the files into the content folder. The application itself uses the [Typst](https://github.com/typst/typst) typesetting system. There are 2 ways to set it up
 
