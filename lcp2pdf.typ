@@ -34,9 +34,9 @@
 
   // Sizes
   Size_half: 0xe954,
-  Size1: 0xe951,
-  Size2: 0xe952,
-  Size3: 0xe953,
+  Size1: 0xe950,
+  Size2: 0xe951,
+  Size3: 0xe952,
   
   // Sizes
   Artillery: 0xe94b,
@@ -118,10 +118,35 @@
   inp.replace("<br>", "\n").replace(regex("</?[a-z]+>"), "")
 }
 
-#let ensure_even_page() = {
-  locate(loc => 
-    if calc.even(loc.page() + 1) {pagebreak()}
-  )
+#let ensure_even_pagebreak() = {
+  pagebreak(weak: false)
+  let s_pagebreaks = state("pagebreaks", ())
+  let s_count1 = state("pageeven_count1", 0)
+  let s_count2 = state("pageeven_count2", 0)
+  let expected_count = frames.len() + manufacturers.len()
+  locate(loc => {
+    if s_count1.final(loc) < expected_count {
+      // First iteration: figure out where to put pagebreaks
+      s_pagebreaks.update(x => {
+        let prev = x.at(-1, default: (0, 0))
+        let expected_page = prev.at(1) + loc.page()
+        let skipped_pages = prev.at(1) + calc.rem(expected_page, 2)
+        (..x, (expected_page, skipped_pages))
+      })
+      s_count1.update(x => x+1)
+    } else {
+      // Consecutove iterations: put pagebreaks
+      // Latch all the states to not update anymore, this will enforce convergance, and we can put pagebreaks in peace
+      s_count1.update(9999)
+      s_count2.update(x => x+1)
+      let pbs = s_pagebreaks.final(loc)
+      s_pagebreaks.update(x => pbs)
+      let count = s_count2.at(loc)
+      if not calc.even(pbs.at(count).at(0)) {
+        pagebreak()
+      }
+    } 
+  })
 }
 
 #let as_a3(body) = {
@@ -211,15 +236,15 @@
   stack(dir: ttb,
     rect(
       width: 100%, stroke: 0pt, fill: COLOR_PALETTE.reaction.first(),
-      text(fill: white, heading(level: 3, reaction_data.name) + [Reaction] + h(10pt) + reaction_data.frequency)
+      text(fill: white, heading(level: 3, reaction_data.at("name", default:"")) + [Reaction] + h(10pt) + reaction_data.at("frequency", default:"Unlimited"))
     ),
     rect(
       width: 100%, stroke: 0pt, fill: white,
-      text(fill: black, [*Trigger:* ] + reaction_data.trigger)
+      text(fill: black, [*Trigger:* ] + reaction_data.at("trigger", default:""))
     ),
     rect(
       width: 100%, stroke: 0pt, fill: COLOR_PALETTE.reaction.last(),
-      text(fill: black, [*Effect:* ] + reaction_data.detail)
+      text(fill: black, [*Effect:* ] + reaction_data.at("detail", default:""))
     )
   ))
 }
@@ -398,7 +423,6 @@
 })
 
 #let display_frame(frame_data) = {
-  ensure_even_page()
   //let manufacturer_data = manufacturers.find(x => x.id == frame_data.source)
   //let bg_img = if manufacturer_data != none and "logo_path" in manufacturer_data {"artwork/blackbox.png"} else {none}
   if USE_A3 {
@@ -412,7 +436,8 @@
   } else {
     _frame_box(frame_data)
     if "img_path" in frame_data {
-      page(align(center, image(frame_data.img_path, height: 95%)))
+      pagebreak()
+      align(center, image(frame_data.img_path, height: 95%))
     }
   }
 }
@@ -477,11 +502,12 @@
 
 #let display_whole() = {
   for manufacturer in manufacturers {
-    pagebreak(weak: true)
+    ensure_even_pagebreak()
     display_manufacturer(manufacturer)
     for frame_data in frames.filter(x => x.source == manufacturer.id) {
-      pagebreak(weak: true)
+      ensure_even_pagebreak()
       display_frame(frame_data)
+      pagebreak()
       display_license(frame_data.name, frame_data.license_id)
     }
   }  
