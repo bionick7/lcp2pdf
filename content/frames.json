@@ -10,7 +10,7 @@
       "Controller",
       "Support"
     ],
-    "description": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare metus id aliquam ullamcorper. Mauris iaculis eu leo eget venenatis. Vestibulum lorem nisl, semper laoreet sem eget, ullamcorper aliquet ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Maecenas vel turpis dolor. Mauris ultricies erat non mauris dignissim aliquam. Etiam accumsan neque sit amet tincidunt feugiat. Integer ullamcorper metus a enim porta, porttitor facilisis justo sollicitudin. Aenean tempor mi non felis pharetra ultricies. Cras semper nunc felis, eu rhoncus nisi porttitor eget. Nulla non sem nec sapien vestibulum sagittis. Nulla volutpat ultricies nisi, ut imperdiet neque sollicitudin in. Pellentesque tempor nisl enim, vitae pharetra orci accumsan nec. Pellentesque maximus mattis ante, quis semper quam elementum sed. Nam scelerisque pellentesque libero, at posuere odio bibendum id. Pellentesque et erat vehicula, luctus odio vel, condimentum risus. Nullam porttitor in ipsum lobortis ultricies. Donec vitae magna hendrerit, malesuada enim eget, porta lorem. Pellentesque augue sem, vestibulum luctus convallis tincidunt, luctus sed dolor. Aenean malesuada elit quis congue malesuada.",
+    "description": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare metus id aliquam ullamcorper. Mauris iaculis eu leo eget venenatis. Vestibulum lorem nisl, semper laoreet sem eget, ullamcorper aliquet ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Maecenas vel turpis dolor. Mauris ultricies erat non mauris dignissim aliquam. Etiam accumsan neque sit amet tincidunt feugiat. Integer ullamcorper metus a enim porta, porttitor facilisis justo sollicitudin. Aenean tempor mi non felis pharetra ultricies. Cras semper nunc felis, eu rhoncus nisi porttitor eget. Nulla non sem nec.",
     "mounts": [
       "Aux/Aux",
       "Aux",
@@ -44,7 +44,7 @@
     ],
     "core_system": {
       "name": "Core System",
-      "description": "Maecenas interdum viverra tortor, eget iaculis lectus auctor in. Quisque mi neque, pharetra vel mauris eget, molestie euismod elit. Etiam tincidunt eu risus vitae fringilla. Nulla vel auctor eros. Cras vitae vulputate ante, ac pharetra velit. Donec tellus magna, dignissim sed pretium at, varius sed felis. Nunc congue nec odio ac varius. Phasellus sit amet iaculis dolor, sed hendrerit risus. In hac habitasse platea dictumst. Mauris luctus pellentesque nibh, eu ultrices nibh feugiat vel. Suspendisse eget iaculis ante. Proin lacinia magna ac scelerisque ultricies. Nunc viverra auctor nisi, congue bibendum neque venenatis at. ",
+      "description": "Maecenas interdum viverra tortor, eget iaculis lectus auctor in. Quisque mi neque, pharetra vel mauris eget, molestie euismod elit. Etiam tincidunt eu risus vitae fringilla. Nulla vel auctor eros. Cras vitae vulputate ante, ac pharetra velit. Donec tellus magna, dignissim sed pretium at, varius sed felis. Nunc congue nec odio ac varius. Phasellus sit amet iaculis dolor, sed hendrerit risus.",
       "activation": "Quick",
       "active_name": "Active",
       "active_effect": "Nunc egestas faucibus ornare. Donec quis sodales ex. Mauris ultrices magna sit amet cursus consectetur. In suscipit diam sit amet erat rhoncus, vel faucibus sem sodales. Proin tristique risus enim, in pretium turpis elementum eu. Nunc eu mattis lectus. Morbi sed orci quis metus consequat luctus. Aliquam laoreet suscipit risus at volutpat. In eg",
@@ -52,6 +52,7 @@
       "passive_effect": "Nunc egestas faucibus ornare. Donec quis sodales ex. Mauris ultrices magna sit amet cursus consectetur. In suscipit diam sit amet erat rhoncus, vel faucibus sem sodales. Proin tristique risus enim, in pretium turpis elementum eu. Nunc eu mattis lectus. Morbi sed orci quis metus consequat luctus. Aliquam laoreet suscipit risus at volutpat. In eg",
       "use": "Scene",
 	  "integrated": ["mw_integrated"]
-    }
+    },
+    "img_path": "artwork/example.svg"
   }
  ]

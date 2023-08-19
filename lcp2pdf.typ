@@ -102,7 +102,7 @@
   #set page(
     numbering: "[1]",
     number-align: right,
-    margin: (left: 3em, right: 3em, bottom: 5em),
+    margin: (left: 2em, right: 2em, top: 2em, bottom: 2em),
     columns: 1
   )
   #doc
@@ -123,17 +123,20 @@
 
 #let box_display(name, header1, header2, body, color_tuple) = {
   box(
-  stack(dir: ttb,
-    rect(
-      text(fill: white, 
-        heading(level: 4, upper(name)) + 
-        if header1.len() > 0 {header1.join(h(10pt))} + 
-        if header2.len() > 0 {linebreak() + header2.join(h(10pt))}
+    stroke: 0pt,
+    inset: 0pt,
+    stack(dir: ttb,
+      rect(
+        text(fill: white, 
+          heading(level: 4, upper(name)) + 
+          if header1.len() > 0 {header1.join(h(10pt))} + 
+          if header2.len() > 0 {linebreak() + header2.join(h(10pt))}
+        ),
+        width: 100%, stroke: 0pt, fill: color_tuple.first()
       ),
-      width: 100%, stroke: 0pt, fill: color_tuple.first()
-    ),
-    rect(body, width: 100%, stroke: 0pt, fill: color_tuple.last())
-  ))
+      rect(body, width: 100%, stroke: 0pt, fill: color_tuple.last())
+    )
+  )
 }
 
 #let compleate_tags(equipment) = {
@@ -327,7 +330,7 @@
 #let display_core_system(core) = {
   heading(level: 2)[CORE SYSTEM]
   heading(level: 3, core.name)
-  par(unescape_html(core.at("description", default:"")), justify: true)
+  par(unescape_html(core.at("description", default:"")), justify: false)
   for integrated_id in core.at("integrated", default:()){
     display_weapon(weapons.find(d => d.id == integrated_id))
   }
@@ -341,61 +344,83 @@
   }
 }
 
-#let display_frame(frame_data) = {
-  align(center, stack(dir: ttb, 
-    text(font: "Barlow", fill: DEFAULT_RED, weight: "extralight", size: 24pt, frame_data.source) + v(1em),
-    text(fill: DEFAULT_RED, size: 24pt, frame_data.name) + v(1em),
-    text(fill: DEFAULT_RED, frame_data.mechtype.join("/")),
-  ))
-  set text(fill: DEFAULT_RED)
-  place(
-    top + left,
-    stack(
-      lancer_glyph(translate_size_glyph(frame_data.stats.size), size: 20pt),
-      ..frame_data.mechtype.map(x => lancer_glyph(x, size: 20pt))
+#let display_frame(frame_data) = page(
+  paper: "a3",
+  flipped: true,
+  columns: 2, {box({
+    // Title
+    align(center, stack(dir: ttb, 
+      text(font: "Barlow", fill: DEFAULT_RED, weight: "extralight", size: 24pt, frame_data.source) + v(1em),
+      text(fill: DEFAULT_RED, size: 24pt, frame_data.name) + v(1em),
+      text(fill: DEFAULT_RED, frame_data.mechtype.join("/")),
+    ))
+    // Icons
+    set text(fill: DEFAULT_RED)
+    place(
+      top + left,
+      stack(
+        lancer_glyph(translate_size_glyph(frame_data.stats.size), size: 32pt),
+        ..frame_data.mechtype.map(x => lancer_glyph(x, size: 32pt))
+      )
     )
-  )
-  set text(fill: black)
-  par(unescape_html(frame_data.description), justify: true)
-  rect(
-    stroke: DEFAULT_RED + 2pt,
-    columns(2,
-      display_stats(frame_data.stats) + 
-      display_traits(frame_data.traits) + 
-      display_mounts(frame_data.mounts) +
-      colbreak() +
-      display_core_system(frame_data.core_system)
+    set text(fill: black)
+    // Flavor
+    grid(
+      columns:(3em, auto, 3em),  // Hack to get variable page margins 
+      [], par(unescape_html(frame_data.description), justify: true), []
     )
-  )
-}
-
-#let display_license(frame_name, license_id) = {
-  let license_counter = counter("license")
-  counter("license").update(1)
-  let license_box(color, content) = {
-    set text(fill: white, size: 12pt)
-    box(fill: color, inset: 5pt, width: 100%, [License] + license_counter.display(" I: ") + content.map(
-      x => x.name
-    ).join([, ])) + linebreak()
-    license_counter.step()
+    // Mechanics
+    rect(stroke: DEFAULT_RED + 2pt,
+    rect(stroke: DEFAULT_RED + 2pt,
+      columns(2,
+        display_stats(frame_data.stats) + 
+        display_traits(frame_data.traits) + 
+        display_mounts(frame_data.mounts) +
+        colbreak() +
+        display_core_system(frame_data.core_system)
+      )
+    ))
+  })
+  // Artwork
+  colbreak()
+  if "img_path" in frame_data {
+    image(frame_data.img_path, height: 95%)
   }
-  let lls = range(1, 4).map(x => equipment.filter(d => d.at("license_id", default:"") == license_id and d.at("license_level", default:-999) == x))
-  // Print licens structure
-  columns(2, 
-  for i in range(3){
-    license_box((LIGHT_RED, DEFAULT_RED, DARK_RED).at(i), lls.at(i))
-    for equipment in lls.at(i){
-      if equipment.file_source == "weapons" { display_weapon(equipment) }
-      if equipment.file_source == "systems" { display_system(equipment) }
-      if equipment.file_source == "weapon_mods" { display_weapon_mod(equipment) }
-      for action in equipment.at("actions", default:()) {
-        if action.activation == "Reaction" {
-          display_reaction(action)
+  }
+)
+
+
+#let display_license(frame_name, license_id) = page(
+  paper: "a3",
+  flipped: true,
+  columns: 2, {
+    let license_counter = counter("license")
+    counter("license").update(1)
+    let license_box(color, content) = {
+      set text(fill: white, size: 12pt)
+      box(fill: color, inset: 5pt, width: 100%, [License] + license_counter.display(" I: ") + content.map(
+        x => x.name
+      ).join([, ])) + linebreak()
+      license_counter.step()
+    }
+    let lls = range(1, 4).map(x => equipment.filter(d => d.at("license_id", default:"") == license_id and d.at("license_level", default:-999) == x))
+    // Print licence structure
+    columns(2, 
+    for i in range(3){
+      license_box((LIGHT_RED, DEFAULT_RED, DARK_RED).at(i), lls.at(i))
+      for equipment in lls.at(i){
+        if equipment.file_source == "weapons" { display_weapon(equipment) }
+        if equipment.file_source == "systems" { display_system(equipment) }
+        if equipment.file_source == "weapon_mods" { display_weapon_mod(equipment) }
+        for action in equipment.at("actions", default:()) {
+          if action.activation == "Reaction" {
+            display_reaction(action)
+          }
         }
       }
-    }
-  })
-}
+    })
+  }
+)
 
 #let display_manufacturer(manufacturer) = {
   [= #manufacturer.name]
