@@ -26,6 +26,17 @@ lcp2pdf accepts some json fields which are ignored by COMP/CON
 - **effect_print**
 Since the core rulebook explain mechanics in a more descriptive way and does not explicitely format actions that are not reactions, an effect_print field is provided for systems, weapons and weapon mods, which will be displayed only in the manual.
 
+- **img_path (frame)**
+Local path to the frames artwork from the compiled file (by default lcp2pdf.typ)
+
+- **logo_path (manufacturer)**
+Local path to the manufacturers logo (Unused)
+
+- **artwork_path (manufacturer)**
+Local path to the artwork that should be displayed with the manufacturer text
+
+Image paths accept .png, .jpg, .gif, .svg
+
 ## Integration into larger document
 If you choose to include lcp2pdf in a larger Typst document, you can include it like so
 ```

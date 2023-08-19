@@ -1,0 +1,10 @@
+[ 
+  {
+    "id": "cb_placeholder",
+    "name": "Bonus",
+    "source": "MAN",
+    "effect": "Effect",
+    "description": "Donec id tellus ex. Nulla sed condimentum dui. Etiam ac metus non massa consequat porttitor. Cras dui elit, malesuada sit amet aliquam et, ultricies ac elit. Donec faucibus commodo enim vitae pretium. Aliquam erat volutpat. Nullam feugiat dui ut ante mollis commodo. Mauris in velit lectus. Aliquam sed nisl suscipit eros mollis scelerisque.",
+    "mounted_effect": "The thing is mounted"
+  }
+]
