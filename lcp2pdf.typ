@@ -171,7 +171,7 @@
     stack(dir: ttb,
       rect(
         text(fill: white, 
-          heading(level: 4, upper(name)) + 
+          heading(level: 4, bookmarked: false, upper(name)) + 
           if header1.len() > 0 {header1.join(h(10pt))} + 
           if header2.len() > 0 {linebreak() + header2.join(h(10pt))}
         ),
@@ -236,7 +236,7 @@
   stack(dir: ttb,
     rect(
       width: 100%, stroke: 0pt, fill: COLOR_PALETTE.reaction.first(),
-      text(fill: white, heading(level: 3, reaction_data.at("name", default:"")) + [Reaction] + h(10pt) + reaction_data.at("frequency", default:"Unlimited"))
+      text(fill: white, heading(level: 3, bookmarked: false, reaction_data.at("name", default:"")) + [Reaction] + h(10pt) + reaction_data.at("frequency", default:"Unlimited"))
     ),
     rect(
       width: 100%, stroke: 0pt, fill: white,
@@ -336,7 +336,7 @@
     STAT_DISPLAY.at(stat_id) + " :" + h(5pt) + str(stat_dict.at(stat_id))
   }
   let stat_heading(name) = text(fill: DEFAULT_RED, strong(name))
-  heading(level: 2)[STATS]
+  heading(level: 2, bookmarked: false)[STATS]
   //grid(columns: 2, ..STAT_DISPLAY.pairs().map(
   //p => p.last() + v(-7pt) + str(stat_dict.at(p.first()))
   //))
@@ -354,14 +354,14 @@
 }
 
 #let display_traits(trait_list) = {
-  heading(level: 2)[TRAITS]
+  heading(level: 2, bookmarked: false)[TRAITS]
   for trait in trait_list {
     box_display(trait.name, (), (), trait.description, COLOR_PALETTE.traits)
   }
 }
 
 #let display_mounts(mount_list) = {
-  heading(level: 2)[MOUNTS]
+  heading(level: 2, bookmarked: false)[MOUNTS]
   grid(columns: (33%, 33%, 33%), column-gutter: 10pt, ..mount_list.map(
     x => box(
       fill: DEFAULT_RED, width: 100%, inset: 10pt,
@@ -371,8 +371,8 @@
 }
 
 #let display_core_system(core) = {
-  heading(level: 2)[CORE SYSTEM]
-  heading(level: 3, core.name)
+  heading(level: 2, bookmarked: false)[CORE SYSTEM]
+  heading(level: 3, core.name, bookmarked: false)
   par(unescape_html(core.at("description", default:"")), justify: true)
   for integrated_id in core.at("integrated", default:()){
     display_weapon(weapons.find(d => d.id == integrated_id))
@@ -389,6 +389,7 @@
 
 #let _frame_box(frame_data) = box({
   // Title
+  hide(heading(level: 2, frame_data.name))
   align(center, stack(dir: ttb, 
     text(font: "Barlow", fill: DEFAULT_RED, weight: "extralight", size: 24pt, frame_data.source) + v(1em),
     text(fill: DEFAULT_RED, size: 24pt, frame_data.name) + v(1em),
@@ -485,6 +486,7 @@
     linebreak()
     par(unescape_html(manufacturer.description), justify: true)
 
+    set heading(bookmarked: false)
     [== #manufacturer.name Core Bonuses]
     for bonus in core_bonuses.filter(x => x.source == manufacturer.id) {
       box_display(bonus.name, (), (), {
