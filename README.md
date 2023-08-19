@@ -19,7 +19,9 @@ Alternatively there is a vscode extension for a Typst IDE
 There is an in-browser editor for Typst, https://typst.app.
 You can duplicate the following project https://typst.app/project/ro8a0upMwPhLAbfdp3vfoj and modify the files in content accordingly. Once you are ready, download the project and compile the relevant files into an lcp as usual.
 
-**NOTE** Due to a limitation with the app, typst.app will not be able to load the compcon font, containing all the lancer icons.
+**NOTES** 
+- Due to a limitation with the app, typst.app will not be able to load the compcon font, containing all the lancer icons (e.g. Range/Blast icons on weapons)
+- Don't delete any of the files in content, if unneeded, just fill in an empty array (`[]`)
 
 ## Additional fields
 lcp2pdf accepts some json fields which are ignored by COMP/CON
