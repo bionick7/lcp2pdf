@@ -9,9 +9,16 @@ This repository provides a way to read the data files included in the .lcp file 
 If you already have the lcp file, change the file extension to ".zip", and extract the files into the content folder. The application itself uses the [Typst](https://github.com/typst/typst) typesetting system. There are 2 ways to set it up
 
 ### Locally through the terminal
-- Install Typst as specified in https://github.com/typst/typst#installation
-- Compile once with `typst compile --font-path ./fonts lcp2pdf.typ manual.pdf`
-- OR setup automatic compilation with `typst watch --font-path ./fonts lcp2pdf.typ manual.pdf`
+Install Typst as specified in https://github.com/typst/typst#installation
+
+Compile once with 
+```
+typst compile --font-path ./fonts lcp2pdf.typ manual.pdf
+```
+OR setup automatic compilation with 
+```
+typst watch --font-path ./fonts lcp2pdf.typ manual.pdf
+```
 
 Alternatively there is a vscode extension for a Typst IDE
 
