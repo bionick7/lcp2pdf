@@ -11,9 +11,9 @@
     "damage": [{"type": "Kinetic", "val": "1d3+1"}, {"type": "Heat", "val": "5d10-78"}],
     "range": [{"type": "Range", "val": 8}, {"type": "Blast", "val": 1}, {"type": "Cone", "val": 2}],
     "description": "Etiam a ultricies mauris, at blandit ex. In tincidunt neque iaculis tortor commodo mattis. Sed nec mauris in justo volutpat iaculis a sed turpis. Praesent felis lacus, auctor ac luctus quis, ultrices vel turpis. Cras ultricies quis lorem quis dignissim. Cras varius bibendum massa, vel suscipit elit convallis sed. Vestibulum non dignissim massa. Etiam aliquam sapien mauris, vel iaculis lacus ultrices non. Nullam vulputate luctus ex, ut volutpat mi porta eget. Sed varius orci ligula, ut dictum eros ornare eget. Pellentesque auctor ornare bibendum. Phasellus a commodo elit. Cras mollis tellus finibus, consequat ligula quis, aliquam sem. Suspendisse nec sapien vitae nunc consequat iaculis.",
-	"on_attack": "you attack",
-	"on_hit": "you hit",
-	"on_crit": "you crit",
+    "on_attack": "you attack",
+    "on_hit": "you hit",
+    "on_crit": "you crit",
     "sp": 1,
     "tags": [{"id": "tg_reliable", "val": 1}, {"id": "tg_ordnance"}, {"id": "tg_accurate"}],
     "synergies": []

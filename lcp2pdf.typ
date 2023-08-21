@@ -8,6 +8,8 @@
 #let manufacturers = json("content/manufacturers.json").map(d => d + (file_source: "manufacturers"))
 #let tag_lib = (json("data/core_tags.json") + json("content/tags.json")).map(d => d + (file_source: "tags"))
 #let core_bonuses = json("content/core_bonuses.json").map(d => d + (file_source: "core_bonuses"))
+#let pilot_gear = json("content/pilot_gear.json").map(d => d + (file_source: "pilot_gear"))
+#let talents = json("content/talents.json").map(d => d + (file_source: "talents"))
 
 #let equipment = weapons + systems + mods
 
@@ -31,6 +33,7 @@
   Heat: 0xe93f,
   Kinetic: 0xe940,
   Variable: 0xe941,
+  variable: 0xe941,
 
   // Sizes
   Size_half: 0xe954,
@@ -43,7 +46,12 @@
   Controller: 0xe94c,
   Striker: 0xe94d,
   Support: 0xe94e,
-  Defender: 0x94f
+  Defender: 0x94f,
+
+  // Talents
+  Talent1: 0xe95c,
+  Talent2: 0xe95d,
+  Talent3: 0xe95e,
 )
 
 #let STAT_DISPLAY = (
@@ -80,12 +88,17 @@
   reaction: (rgb("#0b7675"), rgb("#e7f1f1")),
   ai: (rgb("#d60000"), rgb("#fde8e7")),
   protocol: (rgb("#d75000"), rgb("#fceee5")),
-  traits: (DEFAULT_RED, rgb("#f9e9e9"))
+  traits: (DEFAULT_RED, rgb("#f9e9e9")),
+  pilot_gear: (rgb("#471016"), rgb("#ede7e8")),
 )
 
 // ==================================  STYLING  ===================================
 
 #let USE_A3 = false
+
+#let on_left_page(loc) = {calc.even(loc.page())}
+#let TRAINGLE_WIDTH = 5cm
+#let TRAINGLE_HEIGHT = 3cm
 
 #let style(doc) = [
   #show heading.where(level: 1): it => (
@@ -103,10 +116,87 @@
     leading: 4pt,
   )
   #set page(
-    numbering: "[1]",
-    number-align: right,
-    margin: (left: 2em, right: 2em, top: 2em, bottom: 2em),
-    columns: 1
+    margin: (left: 2em, right: 4.5em, top: 2em, bottom: 2em),
+    background: locate(loc => {
+      let chapter = query(selector(heading).before(loc), loc)
+      if (on_left_page(loc)) {
+        place(left + bottom, polygon(
+          fill: DEFAULT_RED,
+          (TRAINGLE_WIDTH, 100%),
+          (0cm, 100% - TRAINGLE_HEIGHT),
+          (0cm, 100%),
+        ))
+        place(left + bottom,
+          dy: 0.1cm,
+          line(
+          start: (TRAINGLE_WIDTH + 0.7cm, 100%),
+          angle: calc.atan(TRAINGLE_HEIGHT / TRAINGLE_WIDTH) + 180deg,
+          length: 10cm,
+          stroke: 0.2cm + DEFAULT_RED
+        ))
+      } else {
+        place(right + bottom, polygon(
+          fill: DEFAULT_RED,
+          (100% - TRAINGLE_WIDTH, 100%),
+          (100%, 100% - TRAINGLE_HEIGHT),
+          (100%, 100%),
+        ))
+        place(right + bottom,
+          dy: 0.1cm,
+          line(
+          start: (100% - TRAINGLE_WIDTH + 0.7cm, 100%),
+          angle: -calc.atan(TRAINGLE_HEIGHT / TRAINGLE_WIDTH),
+          length: 6.7cm,
+          stroke: 0.2cm + DEFAULT_RED
+        ))
+      }}),
+    foreground: locate(loc => [
+      #let chapter = query(selector(heading.where(level: 1)).before(loc), loc).last()
+      #let chap_count = query(selector(heading.where(level: 1, outlined: true)).before(loc), loc).len()
+      #let section_query = query(selector(heading.where(level: 2)).before(loc), loc)
+      #set text(14pt, white, font: "Barlow")
+      #if(on_left_page(loc)) {
+        place(left + bottom, 
+        dx: 2em, dy: -1em,
+        counter(page).display(
+          "[1]",
+          both: false,
+        ))
+      } else {
+        place(right + bottom, 
+        dx: -2em, dy: -1em,
+        counter(page).display(
+          "[1]",
+          both: false,
+        ))
+      }
+      #set text(11pt, black, font: "DM Sans")
+      #if(on_left_page(loc)) {
+        place(left + bottom, dy: -2em, dx: TRAINGLE_WIDTH)[
+          #if (section_query.len() > 0) { [*Section \/\/ * #section_query.last().body] }
+          else { [*Chapter #chap_count \/\/ * #chapter.body] }
+        ]
+      } else {
+        place(right + bottom, dy: -2em, dx: -TRAINGLE_WIDTH)[
+          #if (section_query.len() > 0) { [*Section \/\/ * #section_query.last().body] }
+          else { [*Chapter #chap_count \/\/ * #chapter.body] }
+        ]
+        // Side content
+        set text(14pt, gray)
+        place(top + right, dx: -1cm, dy: 3.7cm,
+          rotate(-90deg, origin: top + right, 
+          upper(strong(chapter.body))
+        ))
+        set text(64pt, gray, font: "IBM Plex Mono")
+        place(right + top, dy: 0.7em, dx: 0.2em)[
+          *#chap_count*
+        ]
+      }
+    ])
+  )
+  #set table(
+    fill: (c, r) => if c == 0 and r != 0 {black} else if calc.odd(r) {rgb("#e6e6e6")} else {white},
+    stroke: none
   )
   #doc
 ]
@@ -115,7 +205,7 @@
 
 #let unescape_html(inp) = {
   // TODO: properly handle lists etc
-  inp.replace("<br>", "\n").replace(regex("</?[a-z]+>"), "")
+  inp.replace("<br>", "\n").replace(regex("</?[^<>]+>"), "")  // catches 90% of relevant stuff, not robust by any means
 }
 
 #let ensure_even_pagebreak() = {
@@ -158,8 +248,8 @@
   )
 }
 
-#let lancer_glyph(key, size: 14pt) = {
-  text(font: "compcon", fallback: false, size: size,
+#let lancer_glyph(key) = {
+  text(font: "compcon", fallback: false,
     str.from-unicode(GLYPHS.at(key, default:0x0000))
   )
 }
@@ -196,7 +286,7 @@
   let res = equipment.at("tags", default: ())
   if "deployables" in equipment { res.insert(0, (id: "tg_deployable")) }
   for action in equipment.at("actions", default:()) {
-      let tag = ACTIVATION_TAGS.at(action.activation)
+      let tag = ACTIVATION_TAGS.at(action.at("activation", default: "Quick"))
     	if not res.any(x => x.id == tag) { res.insert(0, (id: tag)) }
   }
   res
@@ -208,6 +298,8 @@
   else if size_num == 3 { "Size3" }
   else { "Size1" }
 }
+
+#let translate_talent_glyph(talent_level) = ("Talent1", "Talent2", "Talent3").at(talent_level - 1, default: "Talent1")
 
 #let format_tags(tags) = {
   tags.map(tag => {
@@ -222,11 +314,19 @@
 }
 
 #let format_range(range_data) = {
-  lancer_glyph(range_data.type) + h(5pt) + [#range_data.val] + h(8pt)
+  if "val" in range_data and "type" in range_data {
+    lancer_glyph(range_data.type) + h(5pt) + [#range_data.val] + h(8pt)
+  } else {
+    [INVALID]
+  }
 }
 
 #let format_dmg(dmg_data) = {
-  [#dmg_data.val] + h(5pt) + lancer_glyph(dmg_data.type) + h(8pt)
+  if "val" in dmg_data and "type" in dmg_data {
+    [#dmg_data.val] + h(5pt) + lancer_glyph(dmg_data.type) + h(8pt)
+  } else {
+    [INVALID]
+  }
 }
 
 // ==================================  EQUIPMENT  ===================================
@@ -288,10 +388,10 @@
       fill: white,
       outset: 5pt,
       width: 100%
-    )[*#action.name*: #action.detail]
+    )[*#action.at("name", default:"UNNAMED")*: #action.detail]
   }
   if system_data.at("description", default:"") != "" {
-    body = body + line(length: 100%, stroke: (dash: "densely-dashed")) + emph(unescape_html( system_data.description))
+    body = body + line(length: 100%, stroke: (dash: "densely-dashed")) + emph(unescape_html(system_data.description))
   }
   let header = (str(system_data.sp) + " SP", ..format_tags(compleate_tags(system_data)))
   box_display(system_data.name, header, (), body, COLOR_PALETTE.tech)
@@ -300,21 +400,21 @@
 #let display_nontech_system(system_data) = {
   let body = unescape_html(system_data.at("effect_print", default: system_data.at("effect", default:"No effect")))
   let colors = COLOR_PALETTE.system
-  if system_data.at("actions", default: ()).any(x => x.activation == "Protocol") {
+  if system_data.at("actions", default: ()).any(x => x.at("activation", default: "Quick") == "Protocol") {
     colors = COLOR_PALETTE.protocol
   }
-  if system_data.type == "AI" {
+  if system_data.at("type", default: "System") == "AI" {
     colors = COLOR_PALETTE.ai
   }
   if system_data.at("description", default:"") != "" {
-    body = body + line(length: 100%, stroke: (dash: "densely-dashed")) + emph(unescape_html( system_data.description))
+    body = body + line(length: 100%, stroke: (dash: "densely-dashed")) + emph(unescape_html(system_data.description))
   }
   let header = (str(system_data.sp) + " SP", ..format_tags(compleate_tags(system_data)))
   box_display(system_data.name, header, (), body, colors)
 }
 
 #let display_system(system_data) = {
-  if system_data.type == "Tech" {
+  if system_data.at("type", default: "System") == "Tech" {
     display_tech_system(system_data)
   } else {
     display_nontech_system(system_data)
@@ -381,7 +481,7 @@
   if core.activation == "Protocol" { colors = COLOR_PALETTE.protocol }
   box_display(core.active_name, ("Active (1 CP)", core.activation), (), par(unescape_html(core.active_effect)), colors)
   for action in core.at("actions", default:()) {
-    if action.activation == "Reaction" {
+    if action.at("activation", default: "Quick") == "Reaction" {
       display_reaction(action)
     }
   }
@@ -396,15 +496,13 @@
     text(fill: DEFAULT_RED, frame_data.mechtype.join("/")),
   ))
   // Icons
-  set text(fill: DEFAULT_RED)
   place(
     top + left,
     stack(
-      lancer_glyph(translate_size_glyph(frame_data.stats.size), size: 32pt),
-      ..frame_data.mechtype.map(x => lancer_glyph(x, size: 32pt))
+      text(fill: DEFAULT_RED, size: 32pt, lancer_glyph(translate_size_glyph(frame_data.stats.size))),
+      ..frame_data.mechtype.map(x => text(fill: DEFAULT_RED, size: 32pt, lancer_glyph(x)))
     )
   )
-  set text(fill: black)
   // Flavor
   grid(
     columns:(3em, auto, 3em),  // Hack to get variable page margins 
@@ -463,7 +561,7 @@
       if equipment.file_source == "systems" { display_system(equipment) }
       if equipment.file_source == "weapon_mods" { display_weapon_mod(equipment) }
       for action in equipment.at("actions", default:()) {
-        if action.activation == "Reaction" {
+        if action.at("activation", default: "Quick") == "Reaction" {
           display_reaction(action)
         }
       }
@@ -478,6 +576,9 @@
     )}
   else {_license_box(frame_name, license_id)}
 }
+
+
+// ==================================  LICENSE-INDEPENDANT  ===================================
 
 #let display_manufacturer(manufacturer) = {
   [= #manufacturer.name]
@@ -500,9 +601,111 @@
   })
 }
 
+#let display_talets() = if talents.len() > 0 {
+  let TALENT_COLOR = rgb("#3a82c4")
+  pagebreak()
+  [= Talents]
+  let rnk_count = counter("TalentRank")
+  columns(2, 
+    for talent in talents {
+      box_display(text(size: 16pt, strong(upper(talent.name))), (), (), {
+        par(emph(unescape_html(talent.description)), justify: true)
+        v(1em)
+        rnk_count.update(0)
+        talent.ranks.map(rank => {
+          line(length: 100%, stroke: 2pt + TALENT_COLOR)
+          rnk_count.step()
+          rnk_count.display(x => text(fill: TALENT_COLOR, size: 20pt, lancer_glyph(translate_talent_glyph(x))))
+          h(.5em) + text(size: 16pt, strong(upper(rank.name)))
+          par(unescape_html(rank.description), justify: true)
+          rank.at("actions", default:()).filter(x => x.activation == "Reaction").map(display_reaction).join()
+        }).join()
+      }, (TALENT_COLOR, white))
+    }
+  )
+}
+
+#let display_pilotgear() = if pilot_gear.len() > 0 {
+  pagebreak()
+  [= Gear]
+
+  let get_pilot_bonus(data, id, default: 0) = {
+    let f = data.find(x => x.id == id) 
+    if f == none {default} else {f.at("val", default: default)}
+  }
+
+  let armor_table = pilot_gear.filter(x => x.type == "Armor").map(x => (
+    text(fill: white, upper(strong(x.name))),
+    smallcaps(format_tags(x.at("tags", default: ())).join()),
+    [#get_pilot_bonus(x.at("bonuses", default: ()), "pilot_armor")],
+    [#get_pilot_bonus(x.at("bonuses", default: ()), "pilot_evasion")],
+    [#get_pilot_bonus(x.at("bonuses", default: ()), "pilot_edef")],
+    [#get_pilot_bonus(x.at("bonuses", default: ()), "pilot_speed")],
+  )).flatten()
+  
+  let weapon_table = pilot_gear.filter(x => x.type == "Weapon").map(x => (
+    text(fill: white, upper(strong(x.name))), 
+    smallcaps(format_tags(x.at("tags", default: ())).join(", ")), 
+    x.range.map(format_range).join(" "), 
+    x.damage.map(format_dmg).join(" "),
+  )).flatten()
+
+  if armor_table.len() > 0 {table(
+    columns: 6,
+    ..([], [Tags], [Armor], [Evasion], [E-Defense], [Speed]).map(strong),
+    ..armor_table
+  )}
+  columns(2,{
+    if weapon_table.len() > 0 {table(
+      columns: 4,
+      ..([], [Tags], [Range], [Damage]).map(strong), 
+      ..weapon_table
+    )}
+    for gear in pilot_gear.filter(x => x.type not in ("Weapon", "Armor")) {
+      box_display(
+        text(size: 16pt, strong(upper(gear.name))), 
+        format_tags(gear.at("tags", default: ())), (), {
+        par(emph(gear.description), justify: true)
+        v(1em)
+        par(gear.at("effect_print", default: gear.at("effect", default: "NO EFFECT")), justify: true)
+        gear.at("actions", default: ()).filter(x => x.activation == "Reaction").map(display_reaction).join()
+      }, COLOR_PALETTE.pilot_gear)
+    }
+  })
+}
+
+#let display_gms_equipment() = {
+  let gms_equipment = equipment.filter(x => x.at("license", default:"") == "GMS")
+  if gms_equipment.len() > 0 {
+    [= GMS ADDENDUM]
+
+    let weapon_table = gms_equipment.filter(x => x.file_source == "weapons").map(x => (
+      text(fill: white, upper(strong(x.name))),
+      x.mount + " " + x.type,
+      smallcaps(format_tags(x.at("tags", default: ())).join()), 
+      x.range.map(format_range).join(), 
+      x.damage.map(format_dmg).join(),
+    )).flatten()
+
+    if weapon_table.len() > 0 {table(
+      columns: 5,
+      ..([Name], [Size / Type], [Tags], [Range], [Damage]).map(strong), 
+      ..weapon_table
+    )}
+  }
+  columns(2, {
+    for sys in gms_equipment.filter(x => x.file_source == "systems") {
+      display_system(sys)
+    }
+  })
+}
+
 // ==================================  FILE  ===================================
 
 #let display_whole() = {
+  display_talets()
+  display_pilotgear()
+  display_gms_equipment()
   for manufacturer in manufacturers {
     ensure_even_pagebreak()
     display_manufacturer(manufacturer)
