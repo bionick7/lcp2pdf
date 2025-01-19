@@ -117,9 +117,9 @@
   )
   #set page(
     margin: (left: 2em, right: 4.5em, top: 2em, bottom: 2em),
-    background: locate(loc => {
-      let chapter = query(selector(heading).before(loc), loc)
-      if (on_left_page(loc)) {
+    background: context {
+      let chapter = selector(heading).before(here())
+      if (on_left_page(here())) {
         place(left + bottom, polygon(
           fill: DEFAULT_RED,
           (TRAINGLE_WIDTH, 100%),
@@ -149,13 +149,13 @@
           length: 6.7cm,
           stroke: 0.2cm + DEFAULT_RED
         ))
-      }}),
-    foreground: locate(loc => [
-      #let chapter = query(selector(heading.where(level: 1)).before(loc), loc).last()
-      #let chap_count = query(selector(heading.where(level: 1, outlined: true)).before(loc), loc).len()
-      #let section_query = query(selector(heading.where(level: 2)).before(loc), loc)
+      }},
+    foreground: context [
+      #let chapter = query(selector(heading.where(level: 1)).before(here())).last()
+      #let chap_count = query(selector(heading.where(level: 1, outlined: true)).before(here())).len()
+      #let section_query = query(selector(heading.where(level: 2)).before(here()))
       #set text(14pt, white, font: "Barlow")
-      #if(on_left_page(loc)) {
+      #if(on_left_page(here())) {
         place(left + bottom, 
         dx: 2em, dy: -1em,
         counter(page).display(
@@ -171,15 +171,13 @@
         ))
       }
       #set text(11pt, black, font: "DM Sans")
-      #if(on_left_page(loc)) {
+      #if(on_left_page(here())) {
         place(left + bottom, dy: -2em, dx: TRAINGLE_WIDTH)[
-          #if (section_query.len() > 0) { [*Section \/\/ * #section_query.last().body] }
-          else { [*Chapter #chap_count \/\/ * #chapter.body] }
+          #if (section_query.len() > 0) { [*Section \/\/ * #section_query.last().body] } else { [*Chapter #chap_count \/\/ * #chapter.body] }
         ]
       } else {
         place(right + bottom, dy: -2em, dx: -TRAINGLE_WIDTH)[
-          #if (section_query.len() > 0) { [*Section \/\/ * #section_query.last().body] }
-          else { [*Chapter #chap_count \/\/ * #chapter.body] }
+          #if (section_query.len() > 0) { [*Section \/\/ * #section_query.last().body] } else { [*Chapter #chap_count \/\/ * #chapter.body] }
         ]
         // Side content
         set text(14pt, gray)
@@ -192,7 +190,7 @@
           *#chap_count*
         ]
       }
-    ])
+    ]
   )
   #set table(
     fill: (c, r) => if c == 0 and r != 0 {black} else if calc.odd(r) {rgb("#e6e6e6")} else {white},
@@ -214,8 +212,8 @@
   let s_count1 = state("pageeven_count1", 0)
   let s_count2 = state("pageeven_count2", 0)
   let expected_count = frames.len() + manufacturers.len()
-  locate(loc => {
-    if s_count1.final(loc) < expected_count {
+  context {
+    if s_count1.final() < expected_count {
       // First iteration: figure out where to put pagebreaks
       s_pagebreaks.update(x => {
         let prev = x.at(-1, default: (0, 0))
@@ -232,11 +230,11 @@
       let pbs = s_pagebreaks.final(loc)
       s_pagebreaks.update(x => pbs)
       let count = s_count2.at(loc)
-      if not calc.even(pbs.at(count).at(0)) {
+      if not calc.even(pbs.at(count, 1).at(0)) {
         pagebreak()
       }
     } 
-  })
+  }
 }
 
 #let as_a3(body) = {
@@ -546,7 +544,8 @@
   counter("license").update(1)
   let license_box(color, content) = {
     set text(fill: white, size: 12pt)
-    box(fill: color, inset: 5pt, width: 100%, [License] + license_counter.display(" I: ") + content.map(
+    box(fill: color, inset: 5pt, width: 100%, [License]
+    + context license_counter.display(" I: ") + content.map(
       x => x.name
     ).join([, ])) + linebreak()
     license_counter.step()
@@ -615,7 +614,7 @@
         talent.ranks.map(rank => {
           line(length: 100%, stroke: 2pt + TALENT_COLOR)
           rnk_count.step()
-          rnk_count.display(x => text(fill: TALENT_COLOR, size: 20pt, lancer_glyph(translate_talent_glyph(x))))
+          context rnk_count.display(x => text(fill: TALENT_COLOR, size: 20pt, lancer_glyph(translate_talent_glyph(x))))
           h(.5em) + text(size: 16pt, strong(upper(rank.name)))
           par(unescape_html(rank.description), justify: true)
           rank.at("actions", default:()).filter(x => x.activation == "Reaction").map(display_reaction).join()

@@ -1,2 +1,5 @@
 *.vs
 deploy.bat
+fonts/barlow/*
+fonts/dmsans/*
+fonts/IBM_Plex_Mono/*
