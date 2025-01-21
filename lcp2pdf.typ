@@ -207,34 +207,7 @@
 }
 
 #let ensure_even_pagebreak() = {
-  pagebreak(weak: false)
-  let s_pagebreaks = state("pagebreaks", ())
-  let s_count1 = state("pageeven_count1", 0)
-  let s_count2 = state("pageeven_count2", 0)
-  let expected_count = frames.len() + manufacturers.len()
-  context {
-    if s_count1.final() < expected_count {
-      // First iteration: figure out where to put pagebreaks
-      s_pagebreaks.update(x => {
-        let prev = x.at(-1, default: (0, 0))
-        let expected_page = prev.at(1) + loc.page()
-        let skipped_pages = prev.at(1) + calc.rem(expected_page, 2)
-        (..x, (expected_page, skipped_pages))
-      })
-      s_count1.update(x => x+1)
-    } else {
-      // Consecutove iterations: put pagebreaks
-      // Latch all the states to not update anymore, this will enforce convergance, and we can put pagebreaks in peace
-      s_count1.update(9999)
-      s_count2.update(x => x+1)
-      let pbs = s_pagebreaks.final(loc)
-      s_pagebreaks.update(x => pbs)
-      let count = s_count2.at(loc)
-      if not calc.even(pbs.at(count, 1).at(0)) {
-        pagebreak()
-      }
-    } 
-  }
+  pagebreak(to: "even", weak: false)
 }
 
 #let as_a3(body) = {
